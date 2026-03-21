@@ -1,0 +1,9 @@
+---
+all:
+  vars:
+    ansible_user: "{{ my_user }}"
+  children:
+    keycloak_hosts:
+      hosts:
+        din-server:
+          ansible_host: din-server.exempel.se

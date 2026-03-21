@@ -1,0 +1,66 @@
+---
+- name: Skapar arbetskatalog
+  ansible.builtin.file:
+    path: "{{ keycloak_auth_working_dir }}/{{ item }}"
+    state: directory
+    owner: "{{ docker_user }}"
+    mode: "0755"
+  loop:
+    - ""
+    - ldap
+    - keycloak
+    - nginx/ssl
+
+- name: Kopierar bootstrap.ldif
+  ansible.builtin.copy:
+    src: ldap/bootstrap.ldif
+    dest: "{{ keycloak_auth_working_dir }}/ldap/bootstrap.ldif"
+    owner: "{{ docker_user }}"
+    mode: "0644"
+
+- name: Kopierar realm-export.json
+  ansible.builtin.copy:
+    src: keycloak/realm-export.json
+    dest: "{{ keycloak_auth_working_dir }}/keycloak/realm-export.json"
+    owner: "{{ docker_user }}"
+    mode: "0644"
+
+- name: Kopierar Nginx-konfig
+  ansible.builtin.template:
+    src: nginx/jitsi.conf.j2
+    dest: "{{ keycloak_auth_working_dir }}/nginx/jitsi.conf"
+    owner: "{{ docker_user }}"
+    mode: "0644"
+
+- name: Kontrollerar om SSL-certifikat finns
+  ansible.builtin.stat:
+    path: "{{ keycloak_auth_working_dir }}/nginx/ssl/jitsi.crt"
+  register: ssl_cert
+
+- name: Genererar självsignerat SSL-certifikat
+  ansible.builtin.command:
+    cmd: >
+      openssl req -x509 -nodes -days 365
+      -newkey rsa:2048
+      -keyout {{ keycloak_auth_working_dir }}/nginx/ssl/jitsi.key
+      -out {{ keycloak_auth_working_dir }}/nginx/ssl/jitsi.crt
+      -subj "/CN=localhost"
+      -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
+  when:
+    - ssl_cert.stat.exists == false
+    - nginx_ssl_cert == ""
+  become_user: "{{ docker_user }}"
+
+- name: Kopierar eget SSL-certifikat
+  ansible.builtin.copy:
+    content: "{{ nginx_ssl_cert }}"
+    dest: "{{ keycloak_auth_working_dir }}/nginx/ssl/jitsi.crt"
+    mode: "0644"
+  when: nginx_ssl_cert != ""
+
+- name: Kopierar egen SSL-nyckel
+  ansible.builtin.copy:
+    content: "{{ nginx_ssl_key }}"
+    dest: "{{ keycloak_auth_working_dir }}/nginx/ssl/jitsi.key"
+    mode: "0600"
+  when: nginx_ssl_key != ""

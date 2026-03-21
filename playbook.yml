@@ -30,6 +30,11 @@
     - container_not_pods
     - nginx
     - containers_start
+    # Keyckoak, openldap mm
+    - keycloak_prepare
+    - keycloak_compose
+    - keycloak_start
+    - keycloak_keycloak
 
     - versions_register
     - post_log

@@ -1,0 +1,110 @@
+---
+# Genererad av Ansible – redigera inte manuellt
+# Keycloak + OpenLDAP + Nordeck adapter + Nginx
+
+networks:
+  auth-net:
+    driver: bridge
+
+volumes:
+  keycloak_data:
+  ldap_data:
+  ldap_config:
+
+services:
+
+  # ── OpenLDAP ────────────────────────────────────────────────────
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: openldap
+    restart: unless-stopped
+    command: ["--copy-service"]
+    environment:
+      LDAP_ORGANISATION: "{{ ldap_organisation }}"
+      LDAP_DOMAIN: "{{ ldap_domain }}"
+      LDAP_ADMIN_PASSWORD: "{{ ldap_admin_password }}"
+      LDAP_CONFIG_PASSWORD: "{{ ldap_config_password }}"
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: "readonly"
+      LDAP_READONLY_USER_PASSWORD: "{{ ldap_readonly_password }}"
+      LDAP_TLS: "false"
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+      - ./ldap/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/bootstrap.ldif
+    networks:
+      - auth-net
+
+{% if phpldapadmin_enabled %}
+  # ── phpLDAPadmin ─────────────────────────────────────────────────
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin
+    restart: unless-stopped
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "{{ phpldapadmin_port }}:80"
+    depends_on:
+      - openldap
+    networks:
+      - auth-net
+{% endif %}
+
+  # ── Keycloak ─────────────────────────────────────────────────────
+  keycloak:
+    image: {{ keycloak_image }}
+    container_name: keycloak
+    restart: unless-stopped
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: "{{ keycloak_admin_user }}"
+      KC_BOOTSTRAP_ADMIN_PASSWORD: "{{ keycloak_admin_password }}"
+      KC_DB: dev-file
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME: "{{ keycloak_hostname }}"
+      KC_HOSTNAME_STRICT: "false"
+      KC_LOG_LEVEL: INFO
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    ports:
+      - "{{ keycloak_http_port }}:8080"
+    depends_on:
+      - openldap
+    networks:
+      - auth-net
+
+  # ── Nordeck jitsi-keycloak-adapter-v2 ───────────────────────────
+  adapter:
+    image: {{ adapter_image }}
+    container_name: jitsi-keycloak-adapter
+    restart: unless-stopped
+    environment:
+      KEYCLOAK_ORIGIN: "http://keycloak:8080"
+      KEYCLOAK_REALM: "{{ keycloak_realm }}"
+      KEYCLOAK_CLIENT_ID: "{{ keycloak_client_id }}"
+      KEYCLOAK_CLIENT_SECRET: "{{ keycloak_client_secret }}"
+      JITSI_ORIGIN: "{{ adapter_jitsi_origin }}"
+    ports:
+      - "{{ adapter_port }}:9000"
+    depends_on:
+      - keycloak
+    networks:
+      - auth-net
+
+  # ── Nginx ────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: keycloak-auth-nginx
+    restart: unless-stopped
+    ports:
+      - "{{ nginx_https_port }}:443"
+    volumes:
+      - ./nginx/jitsi.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - adapter
+    networks:
+      - auth-net

@@ -1,0 +1,36 @@
+---
+# ── Generellt ────────────────────────────────────────────────────
+keycloak_auth_working_dir: "/opt/keycloak-auth"
+container_system: "docker"
+docker_user: "{{ ansible_user }}"
+
+# ── LDAP ─────────────────────────────────────────────────────────
+ldap_organisation: "Test Organisation"
+ldap_domain: "test.local"
+ldap_admin_password: "ldapadmin123"
+ldap_config_password: "ldapconfig123"
+ldap_readonly_password: "readonly123"
+
+# ── Keycloak ─────────────────────────────────────────────────────
+keycloak_image: "quay.io/keycloak/keycloak:26.0"
+keycloak_admin_user: "admin"
+keycloak_admin_password: "admin"
+keycloak_realm: "jitsi"
+keycloak_client_id: "jitsi-client"
+keycloak_client_secret: ""          # Fylls i automatiskt av rollen
+keycloak_hostname: "http://localhost:8080"
+keycloak_http_port: 8080
+
+# ── Nordeck adapter ───────────────────────────────────────────────
+adapter_image: "ghcr.io/nordeck/jitsi-keycloak-adapter-v2:latest"
+adapter_port: 9000
+adapter_jitsi_origin: "https://localhost:8443"
+
+# ── Nginx ─────────────────────────────────────────────────────────
+nginx_https_port: 8443
+nginx_ssl_cert: ""                  # Lämna tomt för självsignerat
+nginx_ssl_key: ""
+
+# ── phpLDAPadmin ──────────────────────────────────────────────────
+phpldapadmin_enabled: true
+phpldapadmin_port: 8090

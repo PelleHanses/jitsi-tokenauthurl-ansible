@@ -1,0 +1,11 @@
+---
+# playbook.yml – Installerar Keycloak auth-stack
+# Användning:
+#   ansible-playbook -i inventory.yml playbook.yml
+#   ansible-playbook -i inventory_localhost.yml playbook.yml
+
+- name: Installerar Keycloak + OpenLDAP + Nordeck adapter
+  hosts: keycloak_hosts
+  become: true
+  roles:
+    - keycloak_auth

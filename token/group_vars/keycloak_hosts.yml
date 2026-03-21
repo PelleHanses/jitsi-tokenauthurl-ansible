@@ -1,0 +1,22 @@
+---
+# group_vars/keycloak_hosts.yml
+# Överrid defaults här för din miljö
+# Känsliga värden bör ligga i Ansible Vault
+
+# ── Sökväg ───────────────────────────────────────────────────────
+keycloak_auth_working_dir: "/opt/keycloak-auth"
+docker_user: "pelle"
+
+# ── LDAP-lösenord (använd vault i produktion) ────────────────────
+ldap_admin_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  ...
+
+# ── Keycloak ─────────────────────────────────────────────────────
+keycloak_admin_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  ...
+keycloak_hostname: "http://din-server.exempel.se:8080"
+
+# ── Adapter ───────────────────────────────────────────────────────
+adapter_jitsi_origin: "https://din-jitsi.exempel.se"
