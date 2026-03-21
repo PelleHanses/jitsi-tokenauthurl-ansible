@@ -4,6 +4,7 @@
 remote_working_directory: "/home/opt"
 #podman_user: "podman_jitsi"
 podman_user: "pelle"
+docker_user: "{{ podman_user }}}}"
 service_name: "jitsi"
 TZ: "Europe/Stockholm"
 

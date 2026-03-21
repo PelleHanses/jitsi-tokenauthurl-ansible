@@ -1,0 +1,17 @@
+---
+# group_vars/keycloak.yml
+keycloak_auth_working_dir: "{{ remote_working_directory }}"
+
+# ── LDAP-lösenord (använd vault i produktion) ────────────────────
+ldap_admin_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  ...
+
+# ── Keycloak ─────────────────────────────────────────────────────
+keycloak_admin_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  ...
+keycloak_hostname: "http://din-server.exempel.se:8080"
+
+# ── Adapter ───────────────────────────────────────────────────────
+adapter_jitsi_origin: "https://din-jitsi.exempel.se"
