@@ -1,0 +1,48 @@
+---
+- name: Skapa katalog för versionsfiler
+  file:
+    path: "{{ remote_working_directory }}/{{ org_name }}/versions"
+    state: directory
+    mode: "0755"
+  become_user: "{{ podman_user }}"
+
+- name: Registrerar versioner - Jitsi
+  ansible.builtin.copy:
+    content: "{{ jitsi_version }}\n"
+    dest: "{{ remote_working_directory }}/{{ org_name }}/versions/{{ service_name }}.info"
+  become_user: "{{ podman_user }}"
+
+#- name: Registrerar versioner - Jitsi
+#  ansible.builtin.shell: "echo {{ jitsi_version }} > {{ service_name }}.info"
+#  args:
+#    chdir: "{{ remote_working_directory }}/{{ org_name }}/versions"
+#  become_user: "{{ podman_user }}"
+
+#- name: Registrerar versioner - Moduler
+#  ansible.builtin.shell: "echo {{ item }}_version > {{ item }}_version.info"
+#  args:
+#      chdir: "{{ remote_working_directory }}/{{ org_name }}/versions" 
+#  loop:
+#    - "{{ jitsi_web_info }}"
+#    - "{{ jitsi_prosody_info }}"
+#    - "{{ jitsi_jvb_info }}"
+#    - "{{ jitsi_jicofo_info }}"
+#    - "{{ nginx_info }}"
+#    - "{{ keycloak_info }}"
+#    - "{{ php_info }}"
+#  become_user: "{{ podman_user }}"
+
+- name: Registrerar versioner - Moduler
+  ansible.builtin.copy:
+    content: "{{ item.version }}\n"
+    dest: "{{ remote_working_directory }}/{{ org_name }}/versions/{{ item.name }}_version.info"
+  loop:
+    - { name: "{{ jitsi_web_info }}", version: "{{ web_version }}" }
+    - { name: "{{ jitsi_prosody_info }}", version: "{{ prosody_version }}" }
+    - { name: "{{ jitsi_jvb_info }}", version: "{{ jvb_version }}" }
+    - { name: "{{ jitsi_jicofo_info }}", version: "{{ jicofo_version }}" }
+    - { name: "{{ nginx_info }}", version: "{{ nginx_version }}" }
+    - { name: "{{ keycloak_info }}", version: "{{ keycloak_version }}" }
+    - { name: "{{ php_info }}", version: "{{ php_version }}" }
+  become_user: "{{ podman_user }}"
+

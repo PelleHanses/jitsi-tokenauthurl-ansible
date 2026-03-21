@@ -1,0 +1,21 @@
+---
+- name: Sätt execute-behörighet på gen-passwords.sh
+  ansible.builtin.file:
+    path: "{{ remote_working_directory }}/{{ org_name }}/jitsi/gen-passwords.sh"
+    mode: '0755'
+  become_user: "{{ podman_user }}"
+
+- name: Kontrollera att filen finns
+  ansible.builtin.stat:
+    path: "{{ remote_working_directory }}/{{ org_name }}/jitsi/gen-passwords.sh"
+  register: script_stat
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "exists={{ script_stat.stat.exists }}, executable={{ script_stat.stat.executable }}"
+
+- name: Kör gen-passwords.sh
+  ansible.builtin.command: ./gen-passwords.sh
+  args:
+    chdir: "{{ remote_working_directory }}/{{ org_name }}/jitsi"
+  become_user: "{{ podman_user }}"

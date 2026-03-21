@@ -1,0 +1,62 @@
+---
+- name: Ta bort gammal Jitsi-katalogen
+  ansible.builtin.file:
+    path: "{{ remote_working_directory }}/{{ org_name }}/jitsi"
+    state: absent
+  become_user: "{{ podman_user }}"  
+
+- name: Skapar kataloger
+  file:
+    path: "{{ remote_working_directory }}/{{ org_name }}/{{ item }}/"
+    state: directory
+    mode: "0755"
+  loop:
+    - jitsi
+  become_user: "{{ podman_user }}"
+
+- name: Beräkna checksum på källfilerna
+  ansible.builtin.shell:
+    cmd: "md5sum {{ playbook_dir }}/files/{{ jitsi_upstream_tar }} | cut -d' ' -f1" 
+  register: source_checksum_apps
+  delegate_to: localhost
+  changed_when: false
+
+- name: Läs tidigare checksum om den finns
+  ansible.builtin.slurp:
+    src: "{{ remote_working_directory }}/{{ org_name }}/jitsi_install/.checksum"
+  register: dest_checksum_apps
+  ignore_errors: true
+  become_user: "{{ podman_user }}"  
+
+- name: Kopierar Jitsi-filen
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/{{ jitsi_upstream_tar }}"
+    dest: "{{ remote_working_directory }}/{{ org_name }}/jitsi_install/"
+  become_user: "{{ podman_user }}"
+
+- name: Extrahera tar.gz-filer till ./jitsi
+  ansible.builtin.unarchive:
+    src: "{{ remote_working_directory }}/{{ org_name }}/jitsi_install/{{ jitsi_upstream_tar }}"
+    dest: "{{ remote_working_directory }}/{{ org_name }}/jitsi"
+    remote_src: true
+    extra_opts:
+      - --strip-components=1
+  become_user: "{{ podman_user }}"
+
+  #ansible.builtin.unarchive:
+  #  src: "{{ remote_working_directory }}/{{ org_name }}/jitsi_install/{{ jitsi_upstream_tar }}"
+  #  dest: "{{ remote_working_directory }}/{{ org_name }}/jitsi_temp"
+  #  remote_src: true
+  #become_user: "{{ podman_user }}"  
+
+
+#- name: Byt namn på ny katalog till Jitsi-katalogen
+#  ansible.builtin.command:
+#    cmd: mv "{{ remote_working_directory }}/{{ org_name }}/jitsi_temp/docker-jitsi-meet/" "{{ remote_working_directory }}/{{ org_name }}/jitsi"
+#  become_user: "{{ podman_user }}"  
+
+- name: Spara nytt checksum
+  ansible.builtin.copy:
+    content: "{{ source_checksum_apps.stdout }}"
+    dest: "{{ remote_working_directory }}/{{ org_name }}/jitsi_install/.checksum"
+  become_user: "{{ podman_user }}"

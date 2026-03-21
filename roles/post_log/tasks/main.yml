@@ -1,0 +1,24 @@
+#main.yml
+---
+- name: Säkerställ att alla handlers har körst
+  meta: flush_handlers
+  run_once: true
+  delegate_to: localhost
+
+- name: Avgör vilken miljö det gäller, first host in -l, default to "all"
+  set_fact:
+    ansible_env: "{{ (ansible_limit | default('all')) | trim }}"
+  run_once: true
+
+- name: Visa
+  ansible.builtin.debug:
+    msg: ENV ..{{ ansible_env }}..
+
+- name: Flyttar lokal ansible.log till central logg-katalog
+  command: >
+    mv ./ansible.log "/var/log/ansible/{{ lookup('pipe','date +%Y%m%d-%H%M%S') | trim }}-ansible-{{ playbook_dir | basename | regex_replace(' ','_') }}-{{ ansible_env }}-{{ lookup('env','USER') | trim }}.log"
+  args:
+    removes: ./ansible.log
+  run_once: true
+  delegate_to: localhost
+  become_user: "{{podman_user }}"

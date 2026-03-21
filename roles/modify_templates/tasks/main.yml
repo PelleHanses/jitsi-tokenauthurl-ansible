@@ -1,0 +1,42 @@
+---
+- name: Generera PG lösenord
+  set_fact:
+    postgres_db_user_password: "{{ lookup('password', '/dev/null', length=28, chars='ascii_letters,digits') }}"
+
+- name: Hämta admin-lösenord
+  block:
+    - name: Generera slumpmässigt lösenord (om install playbook)
+      set_fact:
+        admin_password: "{{ lookup('password', '/dev/null', length=28, chars='ascii_letters,digits') }}"
+      when: already_installed == false
+
+    - name: Läser NEXTCLOUD_ADMIN_PASSWORD från config.php (om upgrade/annan playbook)
+      shell: "grep 'NEXTCLOUD_ADMIN_PASSWORD=' {{ remote_working_directory }}/{{ org_name }}/nc/config/config.php | awk -F'=' '{print $2}'"
+      register: read_admin_pass
+      changed_when: false
+      check_mode: no
+      become_user: "{{ podman_user }}"
+      when: already_installed == true
+
+    - name: Sätt admin_password från config
+      set_fact:
+        admin_password: "{{ read_admin_pass.stdout | trim }}"
+      when: already_installed == true
+      
+- name: Resolve hostname to IP
+  set_fact:
+    host_ip: "{{ lookup('dig', ansible_host | default(inventory_hostname)) }}"
+
+- name: Modifiera templates med Jinja2
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/templates/{{ item.file }}.j2"
+    dest: "{{ remote_working_directory }}/{{ org_name }}/{{ item.path }}{{ item.new_file }}"
+    mode: '0750'
+    force: true
+  loop:
+    - { file: "docker-compose-nginx.yml", new_file: "docker-compose-nginx.yml", path: "" }
+    - { file: "nginx-jitsi.conf",  new_file: "jitsi.conf", path: "nginx/conf.d/" }
+    - { file: "env",  new_file: ".env", path: "jitsi/" }
+  loop_control:
+    label: "{{ item.file }}"
+  become_user: "{{ podman_user }}"

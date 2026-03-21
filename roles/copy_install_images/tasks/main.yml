@@ -1,0 +1,90 @@
+---
+- name: Skapa katalog för images på remote
+  file:
+    path: "{{ remote_working_directory }}/{{ org_name }}/images"
+    state: directory
+    mode: "0755"
+  become_user: "{{ podman_user }}"
+
+- name: Kopierar bilder som behöver uppdateras
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/images/{{ item.image }}"
+    dest: "{{ remote_working_directory }}/{{ org_name }}/images/{{ item.image }}"
+    owner: "{{ podman_user }}"
+    group: "{{ podman_user }}"
+    mode: '0740'
+  loop:
+    - { image: "{{ jitsi_web_image }}", installed_version: "{{ web_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_prosody_image }}", installed_version: "{{ prosody_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_jvb_image }}", installed_version: "{{ jvb_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_jicofo_image }}", installed_version: "{{ jicofo_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ nginx_image }}", installed_version: "{{ nginx_installed_version }}", version: "{{ nginx_version }}" }
+    - { image: "{{ keycloak_image }}", installed_version: "{{ keycloak_installed_version }}", version: "{{ keycloak_version }}" }
+    - { image: "{{ php_image }}", installed_version: "{{ php_installed_version }}", version: "{{ php_version }}" }
+  loop_control:
+    label: "{{ item.image }}"
+  become_user: "{{ podman_user }}"
+  when: item.installed_version != item.version
+
+- name: Installerar images - Podman
+  containers.podman.podman_load:
+    input: "{{ remote_working_directory }}/{{ org_name }}/images/{{ item.image }}"
+  loop:
+    - { image: "{{ jitsi_web_image }}", installed_version: "{{ web_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_prosody_image }}", installed_version: "{{ prosody_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_jvb_image }}", installed_version: "{{ jvb_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_jicofo_image }}", installed_version: "{{ jicofo_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ nginx_image }}", installed_version: "{{ nginx_installed_version }}", version: "{{ nginx_version }}" }
+    - { image: "{{ keycloak_image }}", installed_version: "{{ keycloak_installed_version }}", version: "{{ keycloak_version }}" }
+    - { image: "{{ php_image }}", installed_version: "{{ php_installed_version }}", version: "{{ php_version }}" }
+    #- { image: "{{ php_image }}", installed_version: "{{ php_installed_version }}", version: "{{ php_version }}", name: "{{ php_info }}_{{ php_version }}" }
+  register: loaded_images
+  loop_control:
+    label: "{{ item.image }}"
+  become_user: "{{ podman_user }}"
+  when: item.installed_version != item.version and container_system == "podman"
+
+- name: Installerar images Jitsi - Docker
+  community.docker.docker_image_load:
+    path: "{{ remote_working_directory }}/{{ org_name }}/images/{{ item.image }}"
+  loop:
+    - { image: "{{ jitsi_web_image }}", installed_version: "{{ web_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_prosody_image }}", installed_version: "{{ prosody_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_jvb_image }}", installed_version: "{{ jvb_installed_version }}", version: "{{ jitsi_version }}" }
+    - { image: "{{ jitsi_jicofo_image }}", installed_version: "{{ jicofo_installed_version }}", version: "{{ jitsi_version }}" }
+  #register: loaded_images
+  loop_control:
+    label: "{{ item.image }}"
+  become_user: "{{ podman_user }}"
+  when: item.installed_version != item.version and container_system == "docker"
+
+
+- name: Installerar images Övriga - Docker
+  community.docker.docker_image_load:
+    path: "{{ remote_working_directory }}/{{ org_name }}/images/{{ item.image }}"
+  loop:
+    - { image: "{{ nginx_image }}", installed_version: "{{ nginx_installed_version }}", version: "{{ nginx_version }}" }
+    - { image: "{{ keycloak_image }}", installed_version: "{{ keycloak_installed_version }}", version: "{{ keycloak_version }}" }
+    - { image: "{{ php_image }}", installed_version: "{{ php_installed_version }}", version: "{{ php_version }}" }
+  register: loaded_images
+  loop_control:
+    label: "{{ item.image }}"
+  become_user: "{{ podman_user }}"
+  when: item.installed_version != item.version and container_system == "docker"
+
+
+#- name: Tagga om bara de nya/uppdaterade images
+#  ansible.builtin.command: >
+#    podman tag {{ tag }}
+#    localhost/{{ tag | regex_replace('.*/', '') }}
+#  loop: >
+#    {{
+#      loaded_images.results
+#      | selectattr('changed')      
+#     | map(attribute='image.RepoTags')
+#     | list
+#     | flatten
+#   }}
+# loop_control:
+#   loop_var: tag
+# become_user: "{{ podman_user }}"

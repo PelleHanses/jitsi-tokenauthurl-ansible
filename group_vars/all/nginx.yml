@@ -1,0 +1,9 @@
+---
+# Nginx
+jitsi_web_upstream: "web:80"
+nginx_access_log: "access_log"
+nginx_error_log: "error_log"
+
+nginx_proxy_read_timeout: "3600s"
+nginx_proxy_send_timeout: "3600s"
+nginx_proxy_connect_timeout: "60s"

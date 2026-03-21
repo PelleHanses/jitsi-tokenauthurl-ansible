@@ -1,0 +1,23 @@
+---
+- name: Create Docker network for Jitsi
+  community.docker.docker_network:
+    name: meet.jitsi
+    state: present
+  become_user: "{{ podman_user }}"
+  when: container_system == "docker"
+
+- name: Create Podman network for Jitsi
+  containers.podman.podman_network:
+    name: meet.jitsi
+    state: present
+  become_user: "{{ podman_user }}"
+  when: container_system == "podman"
+
+- name: Add external true under the top-level meet.jitsi network
+  ansible.builtin.lineinfile:
+    path: "{{ remote_working_directory }}/{{ org_name }}/jitsi/docker-compose.yml"
+    insertafter: '^ {4}meet\.jitsi:$'
+    line: '        external: true'
+  #args:
+  #  chdir: "{{ remote_working_directory }}/{{ org_name }}/jitsi"
+  become_user: "{{ podman_user }}"

@@ -1,0 +1,35 @@
+#playbook.yml
+- name: Jitsi Install
+  hosts: all
+  vars:
+    playbook_name: "playbook.yml"
+  #vars_files:
+  #  - secrets.yml
+  become: yes
+  gather_facts: yes
+  pre_tasks:
+    - name: Logga vem som startade playbooken
+      debug:
+        msg: "Playbook triggered by {{ lookup('env','USER') }}"
+
+    - name: Verifiera att -l-argumentet är satt
+      fail:
+        msg: "❌ Denna playbook får inte köras utan -l-argument (t.ex. -l qa eller -l prod)"
+      run_once: true
+      when: ansible_limit is not defined
+
+  roles:
+    - versions_check  # Ger already_installed, nextcloud, postgresql, redis, elastic, npush, drawio, collabora, whiteboard, + _installed_version och _installed yes/no 
+    - containers_stop
+    - setup_env
+    - copy_install_images
+    - copy_jitsi
+    - modify_templates
+    - gen_passwords
+    - create_network
+    - container_not_pods
+    - nginx
+    - containers_start
+
+    - versions_register
+    - post_log

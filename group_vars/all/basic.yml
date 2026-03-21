@@ -1,0 +1,21 @@
+---
+# Gemensamt
+#remote_working_directory: "/opt/jitsi"
+remote_working_directory: "/home/opt"
+#podman_user: "podman_jitsi"
+podman_user: "pelle"
+service_name: "jitsi"
+TZ: "Europe/Stockholm"
+
+
+# Jitsi
+jitsi_upstream_tar: "docker-jitsi-meet.tar"
+
+# Portar
+nginx_port_http: "8081"
+nginx_port_https: "8443"
+
+jitsi_port_web: "8000"
+jitsi_port_web_ssl: "8444"
+
+

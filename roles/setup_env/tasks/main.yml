@@ -1,0 +1,83 @@
+---
+- name: Om det är första installationen
+  block:
+    - name: Skapar systemkontot podman_user
+      user:
+        name: "{{ podman_user }}"
+        comment: "Podman-user for Nextcloud"
+        createhome: yes
+          #shell: /usr/bin/nologin
+        shell: /bin/bash
+    
+    - name: Installerar podman och podman-compose
+      dnf:
+        name:
+          - podman
+          - podman-compose
+          - htop
+          - rsync
+        state: present
+      when: container_system == "podman"
+    
+    - name: Ger kontot rättigheter att starta containrar via systemd
+      command: loginctl enable-linger "{{ podman_user }}"
+    
+    - name: Lägger till Ansible-användaren i podman_user-gruppen - Podman
+      command: usermod -aG "{{ podman_user }}" "{{ ansible_user_id }}"
+      when: container_system == "podman"
+
+    - name: Lägger till Ansible-användaren i podman_user-gruppen - Docker
+      command: usermod -aG docker "{{ ansible_user_id }}"
+      when: container_system == "docker"
+
+    - name: Skapar katalog "{{ remote_working_directory }}" och log
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ podman_user }}"
+        group: "{{ podman_user }}"
+      loop:
+        - "{{ remote_working_directory }}"
+        - "/var/log/ansible"
+  
+    - name: Skapar katalog "{{ org_name }}"
+      file:
+        path: "{{ remote_working_directory }}/{{ org_name }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ podman_user }}"
+        group: "{{ podman_user }}"
+
+  when: already_installed == false
+
+   
+- name: Block för att skapa kataloger
+  block:
+    - name: Skapar kataloger
+      file:
+        path: "{{ remote_working_directory }}/{{ org_name }}/{{ item }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ podman_user }}"
+        group: "{{ podman_user }}"
+      loop:
+        - html
+        - nginx
+        - jitsi
+        - jitsi_install
+        - nginx/conf.d
+        - nginx/ssl
+        - nginx/logs
+      ignore_errors: true
+  
+    - name: Skapar katalog för loggar
+      file:
+        path: "{{ remote_working_directory }}/{{ org_name }}/logs"
+        state: directory
+        mode: '0600'
+        owner: "{{ podman_user }}"
+        group: "{{ podman_user }}"
+
+  become_user: "{{ podman_user }}"  
+  when: already_installed == false

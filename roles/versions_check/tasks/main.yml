@@ -1,0 +1,79 @@
+---
+- name: Kontrollerar om {{ service_name }} redan är installerad på hosten
+  ansible.builtin.stat:
+    path: "{{ remote_working_directory }}/{{ org_name }}/versions/{{ service_name }}.info"
+  register: software_marker
+
+- name: Sätt already_installed variabel
+  ansible.builtin.set_fact:
+    already_installed: "{{ software_marker.stat.exists }}"
+
+- name: Skriver ut om {{ service_name }} är installerat tidigare
+  debug:
+    msg: "{{ service_name }} är installerat tidigare: {{ already_installed }}"
+
+- name: Sätt defaultvärde för alla komponenter
+  set_fact:
+    "{{ item }}_installed_version": "0.0.0"
+  loop:
+    - "{{ jitsi_web_info }}"
+    - "{{ jitsi_prosody_info }}"
+    - "{{ jitsi_jvb_info }}"
+    - "{{ jitsi_jicofo_info }}"
+    - "{{ nginx_info }}"
+    - "{{ keycloak_info }}"
+    - "{{ php_info }}"
+
+- name: Kolla om versionsfiler finns
+  ansible.builtin.stat:
+    path: "{{ remote_working_directory }}/{{ org_name }}/versions/{{ item }}.info"
+  register: version_file_stats
+  loop:
+    - "{{ jitsi_web_info }}"
+    - "{{ jitsi_prosody_info }}"
+    - "{{ jitsi_jvb_info }}"
+    - "{{ jitsi_jicofo_info }}"
+    - "{{ nginx_info }}"
+    - "{{ keycloak_info }}"
+    - "{{ php_info }}"
+
+- name: Läs version från fil
+  ansible.builtin.slurp:
+    src: "{{ remote_working_directory }}/{{ org_name }}/versions/{{ item.item }}.info"
+  register: version_infos
+  loop: "{{ version_file_stats.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: item.stat.exists
+
+- name: Sätt installerad version från fil
+  set_fact:
+    "{{ item.item }}_installed_version": "{{ item.content | b64decode | trim }}"
+  loop: "{{ version_infos.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+  when: not item.skipped | default(false)
+
+- name: Sätt installerad-flagga
+  set_fact:
+    "{{ item }}_installed": "{{ lookup('vars', item + '_installed_version') == lookup('vars', item + '_version') }}"
+  loop:
+    - "{{ jitsi_web_info }}"
+    - "{{ jitsi_prosody_info }}"
+    - "{{ jitsi_jvb_info }}"
+    - "{{ jitsi_jicofo_info }}"
+    - "{{ nginx_info }}"
+    - "{{ keycloak_info }}"
+    - "{{ php_info }}"
+
+- name: Skriver ut vilka versioner som är installerade
+  debug:
+    msg: "{{ item }} version: {{ lookup('vars', item + '_installed_version') }}, installed: {{ lookup('vars', item + '_installed') }}"
+  loop:
+    - "{{ jitsi_web_info }}"
+    - "{{ jitsi_prosody_info }}"
+    - "{{ jitsi_jvb_info }}"
+    - "{{ jitsi_jicofo_info }}"
+    - "{{ nginx_info }}"
+    - "{{ keycloak_info }}"
+    - "{{ php_info }}"
