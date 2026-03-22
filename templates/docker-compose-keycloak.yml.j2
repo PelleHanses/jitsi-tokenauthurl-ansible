@@ -78,7 +78,7 @@ services:
 
   # ── Nordeck jitsi-keycloak-adapter-v2 ───────────────────────────
   adapter:
-    image: localhost/{{ adapter_image }}:{{ adapter_version }}
+    image: localhost/{{ jitsi_keycloak_adapter_v2_image }}:{{ jitsi_keycloak_adapter_v2_version }}
     container_name: jitsi-keycloak-adapter
     restart: unless-stopped
     environment:

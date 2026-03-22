@@ -1,5 +1,10 @@
 # Jitsi med Podman
 
+## Iamges
+```
+docker pull ghcr.io/nordeck/jitsi-keycloak-adapter-v2:20260316
+```
+
 ## Installera Jitsi med alla övriga containrar
 Efter att värden satts i variabelfiler ovan och images har skapats starta enligt nedan. Anledningen till att allltid använda "-l <grupp>" är att vi då kan göra en kontroll i playbooken om man angett en grupp - detta för att inte av misstaag råka installera alla hostar som finns med i inventory-filen.
 QA:

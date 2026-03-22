@@ -22,7 +22,7 @@
     - versions_check  # Ger already_installed, nextcloud, postgresql, redis, elastic, npush, drawio, collabora, whiteboard, + _installed_version och _installed yes/no 
     - containers_stop
     - setup_env
-    - copy_install_images
+      #- copy_install_images
     - copy_jitsi
     - modify_templates
     - gen_passwords

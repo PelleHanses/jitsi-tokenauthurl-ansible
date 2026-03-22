@@ -23,9 +23,13 @@
         admin_password: "{{ read_admin_pass.stdout | trim }}"
       when: already_installed == true
       
-- name: Resolve hostname to IP
-  set_fact:
-    host_ip: "{{ lookup('dig', ansible_host | default(inventory_hostname)) }}"
+#- name: Resolve hostname to IP
+#  set_fact:
+#    host_ip: "{{ lookup('dig', ansible_host | default(inventory_hostname)) }}"
+
+- name: Sätt host_ip från ansible_facts
+  ansible.builtin.set_fact:
+    host_ip: "{{ ansible_default_ipv4.address }}"
 
 - name: Modifiera templates med Jinja2
   ansible.builtin.template:

@@ -110,7 +110,7 @@
     cmd: >
       {{ container_system }} compose up -d --force-recreate adapter
     chdir: "{{ keycloak_auth_working_dir }}"
-  become_user: "{{ docker_user }}"
+  become_user: "{{ podman_user }}"
   when: keycloak_client_secret != ""
 
 - name: Visar client secret
