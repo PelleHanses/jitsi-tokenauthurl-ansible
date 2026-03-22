@@ -1,7 +1,0 @@
----
-all:
-  children:
-    keycloak_hosts:
-      hosts:
-        localhost:
-          ansible_connection: local

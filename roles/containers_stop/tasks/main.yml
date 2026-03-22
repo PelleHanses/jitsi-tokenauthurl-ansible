@@ -3,14 +3,14 @@
   ansible.builtin.debug:
     msg: "already_installed = {{ already_installed }}"
     
-- name: Stoppar containrar
+- name: Stoppar containrar - Jitsi
   command: "{{ container_compose_system }} down"
   args:
     chdir: "{{ remote_working_directory }}/{{ org_name }}/jitsi"
   become_user: "{{ podman_user }}"
   when: already_installed
 
-- name: Stoppar containrar
+- name: Stoppar containrar - Nginx
   command: "{{ container_compose_system }} -f docker-compose-{{ item.file }}.yml down"
   args:
     chdir: "{{ remote_working_directory }}/{{ org_name }}"

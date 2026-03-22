@@ -25,12 +25,12 @@
     owner: "{{ podman_user }}"
     mode: "0644"
 
-- name: Kopierar Nginx-konfig
-  ansible.builtin.template:
-    src: "{{ playbook_dir }}/templates/jitsi.conf-keycloak-adapter.j2"
-    dest: "{{ keycloak_auth_working_dir }}/nginx/jitsi.conf"
-    owner: "{{ podman_user }}"
-    mode: "0644"
+#- name: Kopierar Nginx-konfig
+#  ansible.builtin.template:
+#    src: "{{ playbook_dir }}/templates/jitsi.conf-keycloak-adapter.j2"
+#    dest: "{{ keycloak_auth_working_dir }}/nginx/jitsi.conf"
+#    owner: "{{ podman_user }}"
+#    mode: "0644"
 
 - name: Kontrollerar om SSL-certifikat finns
   ansible.builtin.stat:

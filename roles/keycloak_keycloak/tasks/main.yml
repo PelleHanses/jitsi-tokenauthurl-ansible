@@ -108,7 +108,7 @@
 - name: Uppdaterar adapter-containern med rätt client secret
   ansible.builtin.shell:
     cmd: >
-      {{ container_system }} compose up -d --force-recreate adapter
+      {{ container_system }} compose -f docker-compose-keycloak.yml up -d --force-recreate adapter
     chdir: "{{ keycloak_auth_working_dir }}"
   become_user: "{{ podman_user }}"
   when: keycloak_client_secret != ""

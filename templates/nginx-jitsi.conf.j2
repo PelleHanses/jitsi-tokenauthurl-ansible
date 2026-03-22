@@ -73,4 +73,9 @@ server {
         proxy_set_header    Host       $host;
         proxy_read_timeout  {{ nginx_proxy_read_timeout }};
     }
+    # ── Nordeck adapter – OIDC-flödet ────────────────────────────
+    location /oidc/ {
+        proxy_pass http://jitsi-keycloak-adapter:9000/oidc/;
+        proxy_http_version 1.1;
+    }
 }

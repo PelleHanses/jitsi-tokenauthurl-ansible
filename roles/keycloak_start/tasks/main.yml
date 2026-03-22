@@ -49,6 +49,6 @@
 
 - name: Startar adapter och Nginx
   ansible.builtin.shell:
-    cmd: "{{ container_compose_system }} -f docker-compose-keycloak.yml up -d adapter nginx {% if phpldapadmin_enabled %}phpldapadmin{% endif %}"
+    cmd: "{{ container_compose_system }} -f docker-compose-keycloak.yml up -d adapter {% if phpldapadmin_enabled %}phpldapadmin{% endif %}"
     chdir: "{{ keycloak_auth_working_dir }}"
   become_user: "{{ podman_user }}"

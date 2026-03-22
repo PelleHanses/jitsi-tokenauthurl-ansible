@@ -10,9 +10,9 @@ x-podman:
 
 services:
 
-  nginx-proxy:
+  nginx:
     image: {{ nginx_info }}:{{ nginx_version }}
-    container_name: {{ org_name }}_nginx-proxy
+    container_name: {{ org_name }}_nginx
     restart: unless-stopped
     ports:
       - "{{ nginx_port_http }}:80"
