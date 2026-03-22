@@ -23,6 +23,7 @@
     - "{{ nginx_info }}"
     - "{{ keycloak_info }}"
     - "{{ php_info }}"
+    - "{{ jitsi_keycloak_adapter_v2_info }}"
 
 - name: Kolla om versionsfiler finns
   ansible.builtin.stat:
@@ -36,6 +37,7 @@
     - "{{ nginx_info }}"
     - "{{ keycloak_info }}"
     - "{{ php_info }}"
+    - "{{ jitsi_keycloak_adapter_v2_info }}"
 
 - name: Läs version från fil
   ansible.builtin.slurp:
@@ -65,6 +67,7 @@
     - "{{ nginx_info }}"
     - "{{ keycloak_info }}"
     - "{{ php_info }}"
+    - "{{ jitsi_keycloak_adapter_v2_info }}"
 
 - name: Skriver ut vilka versioner som är installerade
   debug:
@@ -77,3 +80,4 @@
     - "{{ nginx_info }}"
     - "{{ keycloak_info }}"
     - "{{ php_info }}"
+    - "{{ jitsi_keycloak_adapter_v2_info }}"

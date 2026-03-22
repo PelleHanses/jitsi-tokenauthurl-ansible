@@ -3,30 +3,35 @@
 jitsi_version: "stable-10741"
 jitsi_web_info: "web"
 web_version: "{{ jitsi_version }}"
-jitsi_web_image: "web.tar"
+jitsi_web_image: "web"
 prosody_version: "{{ jitsi_version }}"
 jitsi_prosody_info: "prosody"
-jitsi_prosody_image: "prosody.tar"
+jitsi_prosody_image: "prosody"
 jvb_version: "{{ jitsi_version }}"
 jitsi_jvb_info: "jvb"
-jitsi_jvb_image: "jvb.tar"
+jitsi_jvb_image: "jvb"
 jicofo_version: "{{ jitsi_version }}"
 jitsi_jicofo_info: "jicofo"
-jitsi_jicofo_image: "jicofo.tar"
+jitsi_jicofo_image: "jicofo"
 
 # Nginx (används som proxy)
 nginx_info: "nginx"
 nginx_version: "1.29-trixie"
-nginx_image: "nginx.tar"
+nginx_image: "nginx"
 
 # Keycloak
 keycloak_info: "keycloak"
 keycloak_version: "26.5"
-keycloak_image: "keycloak.tar"
+keycloak_image: "keycloak"
 
 # Apache/PHP
 php_info: "php"
 php_version: "8.2.30-apache-trixie"
-php_image: "php.tar"
+php_image: "php"
+
+# Adapter
+jitsi_keycloak_adapter_v2_info: "jitsi_keycloak_adapter_v2"
+jitsi_keycloak_adapter_v2_version: "20260316"
+jitsi_keycloak_adapter_v2_image: "jitsi-keycloak-adapter-v2"
 
 

@@ -44,5 +44,6 @@
     - { name: "{{ nginx_info }}", version: "{{ nginx_version }}" }
     - { name: "{{ keycloak_info }}", version: "{{ keycloak_version }}" }
     - { name: "{{ php_info }}", version: "{{ php_version }}" }
+    - { name: "{{ jitsi_keycloak_adapter_v2_info }}", version: "{{ jitsi_keycloak_adapter_v2_version }}" }
   become_user: "{{ podman_user }}"
 

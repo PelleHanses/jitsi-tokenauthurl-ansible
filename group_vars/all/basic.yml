@@ -18,5 +18,4 @@ nginx_port_https: "8443"
 
 jitsi_port_web: "8000"
 jitsi_port_web_ssl: "8444"
-
-
+JVB_COLIBRI_PORT: "8083"

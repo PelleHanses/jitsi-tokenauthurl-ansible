@@ -1,6 +1,7 @@
 ---
-# group_vars/keycloak.yml
-keycloak_auth_working_dir: "{{ remote_working_directory }}"
+# group_vars/all/keycloak.yml
+# ── Generellt ────────────────────────────────────────────────────
+keycloak_auth_working_dir: "{{ remote_working_directory }}/{{ org_name }}/keycloak-auth"
 
 # ── LDAP-lösenord (använd vault i produktion) ────────────────────
 ldap_admin_password: !vault |
@@ -11,7 +12,41 @@ ldap_admin_password: !vault |
 keycloak_admin_password: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   ...
-keycloak_hostname: "http://din-server.exempel.se:8080"
+keycloak_hostname: "http://key.exempel.se:8080"
 
 # ── Adapter ───────────────────────────────────────────────────────
-adapter_jitsi_origin: "https://din-jitsi.exempel.se"
+adapter_jitsi_origin: "{{ JITSI_PUBLIC_URL }}"
+
+####################
+
+# ── LDAP ─────────────────────────────────────────────────────────
+ldap_organisation: "Test Organisation"
+ldap_domain: "test.local"
+ldap_admin_password: "ldapadmin123"
+ldap_config_password: "ldapconfig123"
+ldap_readonly_password: "readonly123"
+
+# ── Keycloak ─────────────────────────────────────────────────────
+#keycloak_image: "quay.io/keycloak/keycloak:26.0"
+keycloak_admin_user: "admin"
+keycloak_admin_password: "admin"
+keycloak_realm: "jitsi"
+keycloak_client_id: "jitsi-client"
+keycloak_client_secret: ""          # Fylls i automatiskt av rollen
+keycloak_hostname: "http://localhost:8080"
+keycloak_http_port: 8086
+
+# ── Nordeck adapter ───────────────────────────────────────────────
+#adapter_image: "ghcr.io/nordeck/jitsi-keycloak-adapter-v2:latest"
+
+adapter_port: 9000
+adapter_jitsi_origin: "https://localhost:8443"
+
+# ── Nginx ─────────────────────────────────────────────────────────
+nginx_https_port: 8443
+nginx_ssl_cert: ""                  # Lämna tomt för självsignerat
+nginx_ssl_key: ""
+
+# ── phpLDAPadmin ──────────────────────────────────────────────────
+phpldapadmin_enabled: true
+phpldapadmin_port: 8090

@@ -9,9 +9,9 @@
 
 - name: Startar OpenLDAP
   ansible.builtin.shell:
-    cmd: "{{ container_system }} compose up -d openldap"
+    cmd: "{{ container_compose_system }} -f docker-compose-keycloak.yml up -d openldap"
     chdir: "{{ keycloak_auth_working_dir }}"
-  become_user: "{{ docker_user }}"
+  become_user: "{{ podman_user }}"
 
 - name: Väntar på att OpenLDAP laddar användare
   ansible.builtin.shell:
@@ -26,13 +26,13 @@
   until: ldap_check.rc == 0 and 'dn:' in ldap_check.stdout
   retries: 20
   delay: 5
-  become_user: "{{ docker_user }}"
+  become_user: "{{ podman_user }}"
 
 - name: Startar Keycloak
   ansible.builtin.shell:
-    cmd: "{{ container_system }} compose up -d keycloak"
+    cmd: "{{ container_compose_system }} -f docker-compose-keycloak.yml up -d keycloak"
     chdir: "{{ keycloak_auth_working_dir }}"
-  become_user: "{{ docker_user }}"
+  become_user: "{{ podman_user }}"
 
 - name: Väntar på att Keycloak svarar
   ansible.builtin.uri:
@@ -49,6 +49,6 @@
 
 - name: Startar adapter och Nginx
   ansible.builtin.shell:
-    cmd: "{{ container_system }} compose up -d adapter nginx {% if phpldapadmin_enabled %}phpldapadmin{% endif %}"
+    cmd: "{{ container_compose_system }} -f docker-compose-keycloak.yml up -d adapter nginx {% if phpldapadmin_enabled %}phpldapadmin{% endif %}"
     chdir: "{{ keycloak_auth_working_dir }}"
-  become_user: "{{ docker_user }}"
+  become_user: "{{ podman_user }}"

@@ -3,7 +3,7 @@
   ansible.builtin.file:
     path: "{{ keycloak_auth_working_dir }}/{{ item }}"
     state: directory
-    owner: "{{ docker_user }}"
+    owner: "{{ podman_user }}"
     mode: "0755"
   loop:
     - ""
@@ -13,23 +13,23 @@
 
 - name: Kopierar bootstrap.ldif
   ansible.builtin.copy:
-    src: ldap/bootstrap.ldif
+    src: "{{ playbook_dir }}/files/ldap/bootstrap.ldif"
     dest: "{{ keycloak_auth_working_dir }}/ldap/bootstrap.ldif"
-    owner: "{{ docker_user }}"
+    owner: "{{ podman_user }}"
     mode: "0644"
 
 - name: Kopierar realm-export.json
   ansible.builtin.copy:
-    src: keycloak/realm-export.json
+    src: "{{ playbook_dir }}/files/keycloak/realm-export.json"
     dest: "{{ keycloak_auth_working_dir }}/keycloak/realm-export.json"
-    owner: "{{ docker_user }}"
+    owner: "{{ podman_user }}"
     mode: "0644"
 
 - name: Kopierar Nginx-konfig
   ansible.builtin.template:
-    src: nginx/jitsi.conf.j2
+    src: "{{ playbook_dir }}/templates/jitsi.conf-keycloak-adapter.j2"
     dest: "{{ keycloak_auth_working_dir }}/nginx/jitsi.conf"
-    owner: "{{ docker_user }}"
+    owner: "{{ podman_user }}"
     mode: "0644"
 
 - name: Kontrollerar om SSL-certifikat finns
@@ -49,7 +49,7 @@
   when:
     - ssl_cert.stat.exists == false
     - nginx_ssl_cert == ""
-  become_user: "{{ docker_user }}"
+  become_user: "{{ podman_user }}"
 
 - name: Kopierar eget SSL-certifikat
   ansible.builtin.copy:

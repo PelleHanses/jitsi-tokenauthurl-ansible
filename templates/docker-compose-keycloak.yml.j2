@@ -54,7 +54,7 @@ services:
 
   # ── Keycloak ─────────────────────────────────────────────────────
   keycloak:
-    image: {{ keycloak_image }}
+    image: localhost/{{ keycloak_image }}:{{ keycloak_version }}
     container_name: keycloak
     restart: unless-stopped
     command: start-dev --import-realm
@@ -78,7 +78,7 @@ services:
 
   # ── Nordeck jitsi-keycloak-adapter-v2 ───────────────────────────
   adapter:
-    image: {{ adapter_image }}
+    image: localhost/{{ adapter_image }}:{{ adapter_version }}
     container_name: jitsi-keycloak-adapter
     restart: unless-stopped
     environment:
