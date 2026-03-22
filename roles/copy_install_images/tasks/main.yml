@@ -40,7 +40,7 @@
         - { image: "{{ nginx_image }}", installed_version: "{{ nginx_installed_version }}", version: "{{ nginx_version }}" }
         - { image: "{{ keycloak_image }}", installed_version: "{{ keycloak_installed_version }}", version: "{{ keycloak_version }}" }
         - { image: "{{ php_image }}", installed_version: "{{ php_installed_version }}", version: "{{ php_version }}" }
-        - { image: "{{ adapter_image }}", installed_version: "{{ adapter_installed_version }}", version: "{{ adapter_version }}" }
+        - { image: "{{ jitsi_keycloak_adapter_v2_image }}", installed_version: "{{ jitsi_keycloak_adapter_v2_installed_version }}", version: "{{ jitsi_keycloak_adapter_v2_version }}" }
         #- { image: "{{ php_image }}", installed_version: "{{ php_installed_version }}", version: "{{ php_version }}", name: "{{ php_info }}_{{ php_version }}" }
       register: loaded_images
       loop_control:
@@ -72,7 +72,7 @@
         - { image: "{{ nginx_image }}", installed_version: "{{ nginx_installed_version }}", version: "{{ nginx_version }}" }
         - { image: "{{ keycloak_image }}", installed_version: "{{ keycloak_installed_version }}", version: "{{ keycloak_version }}" }
         - { image: "{{ php_image }}", installed_version: "{{ php_installed_version }}", version: "{{ php_version }}" }
-        - { image: "{{ adapter_image }}", installed_version: "{{ adapter_installed_version }}", version: "{{ adapter_version }}" }
+        - { image: "{{ jitsi_keycloak_adapter_v2_image }}", installed_version: "{{ jitsi_keycloak_adapter_v2_installed_version }}", version: "{{ jitsi_keycloak_adapter_v2_version }}" }
       register: loaded_images
       loop_control:
         label: "{{ item.image }}"
