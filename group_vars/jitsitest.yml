@@ -6,8 +6,8 @@ container_compose_system: "docker compose"
 # Podman som container-verktyg
 #container_system: "podman"
 #container_compose_system: "podman-compose"
-jitsi_public_hostname: "meet-jitsitest.example.se"
+jitsi_public_hostname: "meet.example.se"
 
 
 # Jitsi
-JITSI_PUBLIC_URL: "https://meet-jitsitest.example.se"
+JITSI_PUBLIC_URL: "https://meet.example.se"

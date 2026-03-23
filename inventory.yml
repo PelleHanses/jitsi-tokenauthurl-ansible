@@ -1,14 +1,17 @@
 # inventory.yml
 all:
   children:
-    jitsitestqa:
-      hosts:
-        localhost:
-          ansible_host: lp002.example.se
-          ansible_ssh_host: lp002.example.se
-          #  ansible_ssh_common_args: "-o ProxyJump={{ my_user }}@jumpserver1.example.se"
+    #jitsitestqa:
+    #  hosts:
+    #    localhost:
+    #      ansible_host: lp002.example.se
+    #      ansible_ssh_host: lp002.example.se
+    #      #  ansible_ssh_common_args: "-o ProxyJump={{ my_user }}@jumpserver1.example.se"
     jitsitest:
       hosts:
         lp001.example.se:
           ansible_host: lp001.example.se
           ansible_ssh_host: lp001.example.se
+      
+        #localhost:
+        #  ansible_connection: local
