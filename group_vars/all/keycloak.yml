@@ -12,10 +12,10 @@ ldap_admin_password: !vault |
 keycloak_admin_password: !vault |
   $ANSIBLE_VAULT;1.1;AES256
   ...
-keycloak_hostname: "http://key.example.se:8080"
+keycloak_hostname: "http://{{ jitsi_public_hostname }}:{{ keycloak_http_port }}"
 
 # ── Adapter ───────────────────────────────────────────────────────
-adapter_jitsi_origin: "{{ JITSI_PUBLIC_URL }}:{{ nginx_port_https }}"
+adapter_jitsi_origin: "https://{{ jitsi_public_hostname }}:{{ nginx_port_https }}"
 
 ####################
 
@@ -32,7 +32,7 @@ keycloak_admin_user: "admin"
 keycloak_admin_password: "admin"
 keycloak_realm: "jitsi"
 keycloak_client_id: "jitsi-client"
-keycloak_client_secret: ""          # Fylls i automatiskt av rollen
+keycloak_client_secret: "FYLL-I-EFTER-KEYCLOAK-SKAPAS"          # Fylls i automatiskt av rollen
 #keycloak_hostname: "http://localhost:8080"
 keycloak_http_port: 8086
 

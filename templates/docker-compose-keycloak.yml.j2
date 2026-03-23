@@ -83,6 +83,15 @@ services:
       KEYCLOAK_CLIENT_ID: "{{ keycloak_client_id }}"
       KEYCLOAK_CLIENT_SECRET: "{{ keycloak_client_secret }}"
       JITSI_ORIGIN: "{{ adapter_jitsi_origin }}"
+      #KEYCLOAK_SERVER_URL: "https://key.example.se/auth"
+      #KEYCLOAK_REALM: "Jitsi"
+      #KEYCLOAK_CLIENT_ID: "jitsi-meet"
+      KEYCLOAK_ADAPTER_CORS_ENABLED: "true"
+      KEYCLOAK_ADAPTER_CORS_ALLOWED_ORIGINS: "https://meet.example.se"
+      KEYCLOAK_ADAPTER_TOKEN_LIFETIME: "30m"
+      KEYCLOAK_MODE: "tokenize"
+      JWT_APP_SECRET: "{{ JWT_APP_SECRET }}"
+      JWT_APP_ID: "{{ JWT_APP_ID }}"
     ports:
       - "{{ adapter_port }}:9000"
     depends_on:

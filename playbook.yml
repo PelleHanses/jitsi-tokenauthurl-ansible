@@ -28,13 +28,13 @@
     - gen_passwords
     - create_network
     - container_not_pods
-    - nginx
-    - containers_start
     # Keyckoak, openldap mm
     - keycloak_prepare
     - keycloak_compose
     - keycloak_start
     - keycloak_keycloak
     
+    - nginx
+    - containers_start
     - versions_register
     - post_log

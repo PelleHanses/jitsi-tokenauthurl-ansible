@@ -1,7 +1,7 @@
 ---
 - name: Hämtar Keycloak admin-token
   ansible.builtin.uri:
-    url: "http://localhost:{{ keycloak_http_port }}/realms/master/protocol/openid-connect/token"
+    url: "http://{{ ansible_host }}:{{ keycloak_http_port }}/realms/master/protocol/openid-connect/token"
     method: POST
     body_format: form-urlencoded
     body:

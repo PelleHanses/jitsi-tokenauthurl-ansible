@@ -16,6 +16,6 @@ all:
         #localhost:
         #  ansible_connection: local
 
-        lp001.example.com:
-          ansible_host: lp001.example.com
-          ansible_ssh_host: lp001.example.com
+        lp001.example.se:
+          ansible_host: lp001.example.se
+          ansible_ssh_host: lp001.example.se

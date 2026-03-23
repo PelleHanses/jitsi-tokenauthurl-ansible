@@ -8,7 +8,6 @@ docker_user: "{{ podman_user }}"
 service_name: "jitsi"
 TZ: "Europe/Stockholm"
 
-
 # Jitsi
 jitsi_upstream_tar: "docker-jitsi-meet.tar"
 

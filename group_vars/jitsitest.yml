@@ -8,6 +8,8 @@ container_compose_system: "docker compose"
 #container_compose_system: "podman-compose"
 jitsi_public_hostname: "meet.example.se"
 
+JWT_APP_SECRET: "my_jitsi_app_secret"
+JWT_APP_ID: "my_jitsi_app_id_secret"
 
 # Jitsi
-JITSI_PUBLIC_URL: "https://meet-jitsitest.example.se"
+JITSI_PUBLIC_URL: "https://meet.example.se"

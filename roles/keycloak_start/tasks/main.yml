@@ -24,7 +24,7 @@
       "(objectClass=inetOrgPerson)" dn
   register: ldap_check
   until: ldap_check.rc == 0 and 'dn:' in ldap_check.stdout
-  retries: 20
+  retries: 40
   delay: 5
   become_user: "{{ podman_user }}"
 

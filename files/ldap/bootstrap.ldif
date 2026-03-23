@@ -1,15 +1,15 @@
 # Bootstrap för osixia/openldap
 # Skapar organisationsstruktur, testanvändare och grupper
 
-dn: ou=users,dc=test,dc=local
+dn: ou=users,dc=example,dc=local
 objectClass: organizationalUnit
 ou: users
 
-dn: ou=groups,dc=test,dc=local
+dn: ou=groups,dc=example,dc=local
 objectClass: organizationalUnit
 ou: groups
 
-dn: uid=alice,ou=users,dc=test,dc=local
+dn: uid=alice,ou=users,dc=example,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 objectClass: shadowAccount
@@ -23,9 +23,9 @@ gidNumber: 1001
 userPassword: alice123
 loginShell: /bin/bash
 homeDirectory: /home/alice
-mail: alice@test.local
+mail: alice@example.local
 
-dn: uid=bob,ou=users,dc=test,dc=local
+dn: uid=bob,ou=users,dc=example,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 objectClass: shadowAccount
@@ -39,9 +39,9 @@ gidNumber: 1002
 userPassword: bob123
 loginShell: /bin/bash
 homeDirectory: /home/bob
-mail: bob@test.local
+mail: bob@example.local
 
-dn: uid=admin-user,ou=users,dc=test,dc=local
+dn: uid=admin-user,ou=users,dc=example,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
 objectClass: shadowAccount
@@ -55,16 +55,16 @@ gidNumber: 1003
 userPassword: admin123
 loginShell: /bin/bash
 homeDirectory: /home/admin-user
-mail: admin@test.local
+mail: admin@example.local
 
-dn: cn=jitsi-users,ou=groups,dc=test,dc=local
+dn: cn=jitsi-users,ou=groups,dc=example,dc=local
 objectClass: groupOfNames
 cn: jitsi-users
-member: uid=alice,ou=users,dc=test,dc=local
-member: uid=bob,ou=users,dc=test,dc=local
-member: uid=admin-user,ou=users,dc=test,dc=local
+member: uid=alice,ou=users,dc=example,dc=local
+member: uid=bob,ou=users,dc=example,dc=local
+member: uid=admin-user,ou=users,dc=example,dc=local
 
-dn: cn=jitsi-admins,ou=groups,dc=test,dc=local
+dn: cn=jitsi-admins,ou=groups,dc=example,dc=local
 objectClass: groupOfNames
 cn: jitsi-admins
-member: uid=admin-user,ou=users,dc=test,dc=local
+member: uid=admin-user,ou=users,dc=example,dc=local

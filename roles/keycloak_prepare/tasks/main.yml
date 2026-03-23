@@ -19,11 +19,13 @@
     mode: "0644"
 
 - name: Kopierar realm-export.json
-  ansible.builtin.copy:
-    src: "{{ playbook_dir }}/files/keycloak/realm-export.json"
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/templates/realm-export.json.j2"
     dest: "{{ keycloak_auth_working_dir }}/keycloak/realm-export.json"
     owner: "{{ podman_user }}"
-    mode: "0644"
+    mode: '0750'
+    force: true
+  become_user: "{{ podman_user }}"
 
 #- name: Kopierar Nginx-konfig
 #  ansible.builtin.template:

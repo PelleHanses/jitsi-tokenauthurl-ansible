@@ -22,11 +22,13 @@
       "directAccessGrantsEnabled": false,
       "serviceAccountsEnabled": false,
       "redirectUris": [
+        "https://{{ jitsi_public_hostname }}:{{ nginx_port_https }}/oidc/tokenize",
+        "https://{{ jitsi_public_hostname }}:{{ nginx_port_https }}/*",
         "https://localhost:8443/oidc/tokenize",
         "https://localhost:8443/*"
       ],
       "webOrigins": [
-        "https://localhost:8443"
+        "https://{{ jitsi_public_hostname }}:{{ nginx_port_https }}"
       ],
       "protocol": "openid-connect",
       "attributes": {

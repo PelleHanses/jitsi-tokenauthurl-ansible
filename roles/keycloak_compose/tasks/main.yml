@@ -1,11 +1,15 @@
 ---
-- name: Skapar .env-fil
-  ansible.builtin.template:
-    src: env.j2
-    dest: "{{ keycloak_auth_working_dir }}/.env"
-    owner: "{{ podman_user }}"
-    mode: "0600"
-    force: true
+#- name: Skapar .env-fil
+#  ansible.builtin.template:
+#    src: env.j2
+#    dest: "{{ keycloak_auth_working_dir }}/.env"
+#    owner: "{{ podman_user }}"
+#    mode: "0600"
+#    force: true
+
+- name: Kopierar .env från Jitsi
+  command: "cp {{ remote_working_directory }}/{{ org_name }}/jitsi/.env {{ keycloak_auth_working_dir }}/.env"
+  become_user: "{{ podman_user }}"
 
 - name: Skapar docker-compose.yml
   ansible.builtin.template:
