@@ -31,14 +31,14 @@
     label: "{{ item.container }}"
   become_user: "{{ podman_user }}"
 
-- name: Startar containrar - Övriga
-  shell: "{{ container_compose_system }} -f docker-compose-{{ item.file }}.yml up -d"
-  args:
-    chdir: "{{ remote_working_directory }}/{{ org_name }}"
-  loop:
-    #- { container: "{{ keycloak_info }}", installed: "{{ keycloak_info }}_installed",  file: "{{ keycloak_info }}" }
-    #- { container: "{{ php_info }}",   installed: "{{ php_info }}_installed",  file: "{{ php_info }}" }
-    - { container: "{{ nginx_info }}",    installed: "{{ nginx_info }}_installed",  file: "{{ nginx_info }}" }
-  loop_control:
-    label: "{{ item.container }}"
-  become_user: "{{ podman_user }}"
+#- name: Startar containrar - Övriga
+#  shell: "{{ container_compose_system }} -f docker-compose-{{ item.file }}.yml up -d"
+#  args:
+#    chdir: "{{ remote_working_directory }}/{{ org_name }}"
+#  loop:
+#    #- { container: "{{ keycloak_info }}", installed: "{{ keycloak_info }}_installed",  file: "{{ keycloak_info }}" }
+#    #- { container: "{{ php_info }}",   installed: "{{ php_info }}_installed",  file: "{{ php_info }}" }
+#    - { container: "{{ nginx_info }}",    installed: "{{ nginx_info }}_installed",  file: "{{ nginx_info }}" }
+#  loop_control:
+#    label: "{{ item.container }}"
+#  become_user: "{{ podman_user }}"
