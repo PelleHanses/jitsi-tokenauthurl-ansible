@@ -1,6 +1,6 @@
 ---
 # Use images from repo or local tar files
-use_local_tar_images: "true"
+use_local_tar_images: "false"
 
 # Local image repo, can be left empty for default to jitsi
 local_imagee_repo: "jitsi" 

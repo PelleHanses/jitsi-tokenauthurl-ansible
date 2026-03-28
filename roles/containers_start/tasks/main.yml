@@ -1,13 +1,4 @@
 ---
-- name: Ta bort Prosody-kontofiler så de återskapas vid uppstart
-  ansible.builtin.file:
-    path: "{{ remote_working_directory }}/{{ org_name }}/jitsi/prosody/data/auth%2emeet%2ejitsi/accounts/{{ item }}"
-    state: absent
-  loop:
-    - focus.dat
-    - jvb.dat
-  become_user: "{{ podman_user }}"
-
 - name: Startar containrar - Jitsi
   shell: "{{ container_compose_system }} up -d {{ item.container }} && sleep {{ item.delay }}"
   args:

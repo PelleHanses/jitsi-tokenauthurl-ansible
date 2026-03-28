@@ -34,8 +34,6 @@
     mode: '0750'
     force: true
   loop:
-    - { file: "docker-compose-nginx.yml", new_file: "docker-compose-nginx.yml", path: "" }
-    - { file: "nginx-jitsi.conf",  new_file: "jitsi.conf", path: "nginx/conf.d/" }
     - { file: "env",  new_file: ".env", path: "jitsi/" }
   loop_control:
     label: "{{ item.file }}"

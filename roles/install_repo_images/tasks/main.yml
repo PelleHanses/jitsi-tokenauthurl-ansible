@@ -1,31 +1,53 @@
 ---
-- name: Sätt image-prefix
-  ansible.builtin.set_fact:
-    _image_repo: "{{ local_image_repo | default('jitsi', true) }}"
+- name: Block for repo images
+  block:
+    - name: Sätt image-prefix
+      ansible.builtin.set_fact:
+        _image_repo: "{{ local_image_repo | default('jitsi', true) }}"
 
-- name: Sätt lista över Jitsi-images
-  ansible.builtin.set_fact:
-    _jitsi_images:
-      - name: "{{ jitsi_web_name }}""
-        version: "{{ web_version }}"
-      - name: "{{ jitsi_jicofo_name }}""
-        version: "{{ jicofo_version }}"
-      - name: "{{ jitsi_prosody_name }}""
-        version: "{{ prosody_version }}"
-      - name: "{{ jitsi_jvb_name }}""
-        version: "{{ jvb_version }}"
+    - name: Sätt lista över Jitsi-images
+      ansible.builtin.set_fact:
+        _jitsi_images:
+          - name: "{{ jitsi_web_name }}""
+            version: "{{ web_version }}"
+          - name: "{{ jitsi_jicofo_name }}""
+            version: "{{ jicofo_version }}"
+          - name: "{{ jitsi_prosody_name }}""
+            version: "{{ prosody_version }}"
+          - name: "{{ jitsi_jvb_name }}""
+            version: "{{ jvb_version }}"
 
-- name: Dra ner Jitsi-images
-  containers.podman.podman_image:
-    name: "{{ _image_repo }}/{{ item.name }}:{{ item.version }}"
-    state: present
-  loop: "{{ _jitsi_images }}"
-  become_user: "{{ podman_user }}"
-  when: container_runtime == 'podman'
+    - name: Dra ner Jitsi-images
+      containers.podman.podman_image:
+        name: "{{ _image_repo }}/{{ item.name }}:{{ item.version }}"
+        state: present
+      register: loaded_images
+      loop: "{{ _jitsi_images }}"
+      become_user: "{{ podman_user }}"
+      when: container_runtime == 'podman'
 
-- name: Dra ner Jitsi-images (docker)
-  community.docker.docker_image:
-    name: "{{ _image_repo }}/{{ item.name }}:{{ item.version }}"
-    source: pull
-  loop: "{{ _jitsi_images }}"
-  when: container_runtime == 'docker'
+    - name: Dra ner Jitsi-images (docker)
+      community.docker.docker_image:
+        name: "{{ _image_repo }}/{{ item.name }}:{{ item.version }}"
+        source: pull
+      register: loaded_images
+      loop: "{{ _jitsi_images }}"
+      when: container_runtime == 'docker'
+    
+    - name: Tagga om bara de nya/uppdaterade images
+      ansible.builtin.command: >
+        podman tag {{ tag }}
+        {{ local_iamge_repo }}/{{ tag | regex_replace('.*/', '') }}
+      loop: >
+        {{
+          loaded_images.results
+          | selectattr('changed')      
+        | map(attribute='image.RepoTags')
+        | list
+        | flatten
+      }}
+      loop_control:
+        loop_var: tag
+      become_user: "{{ podman_user }}"
+    
+  when: not use_local_tar_images
