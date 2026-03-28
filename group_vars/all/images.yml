@@ -1,32 +1,24 @@
 ---
+# Use images from repo or local tar files
+use_local_tar_images: "true"
+
+# Local image repo, can be left empty for default to jitsi
+local_imagee_repo: "jitsi" 
+
 # Jitsi
 jitsi_version: "stable-10741"
-jitsi_web_info: "web"
+
+jitsi_web_name: "web"
+jitsi_prosody_name: "prosody"
+jitsi_jvb_name: "jvb"
+jitsi_jicofo_name: "jicofo"
+
 web_version: "{{ jitsi_version }}"
-jitsi_web_image: "web.tar"
 prosody_version: "{{ jitsi_version }}"
-jitsi_prosody_info: "prosody"
-jitsi_prosody_image: "prosody.tar"
 jvb_version: "{{ jitsi_version }}"
-jitsi_jvb_info: "jvb"
-jitsi_jvb_image: "jvb.tar"
 jicofo_version: "{{ jitsi_version }}"
-jitsi_jicofo_info: "jicofo"
+
+jitsi_web_image: "web.tar"
+jitsi_prosody_image: "prosody.tar"
+jitsi_jvb_image: "jvb.tar"
 jitsi_jicofo_image: "jicofo.tar"
-
-# Nginx (används som proxy)
-nginx_info: "nginx"
-nginx_version: "1.29-trixie"
-nginx_image: "nginx.tar"
-
-# Keycloak
-keycloak_info: "keycloak"
-keycloak_version: "26.5"
-keycloak_image: "keycloak.tar"
-
-# Apache/PHP
-php_info: "php"
-php_version: "8.2.30-apache-trixie"
-php_image: "php.tar"
-
-

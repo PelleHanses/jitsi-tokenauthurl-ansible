@@ -1,13 +1,6 @@
 ---
 org_name: "jitsitest"
-# Docker som container-verktyg
-container_system: "docker"
-container_compose_system: "docker compose"
-# Podman som container-verktyg
-#container_system: "podman"
-#container_compose_system: "podman-compose"
-jitsi_public_hostname: "meet.example.se"
-
 
 # Jitsi
 JITSI_PUBLIC_URL: "https://meet.example.se"
+jitsi_public_hostname: "meet.example.se"

@@ -1,0 +1,31 @@
+---
+- name: Sätt image-prefix
+  ansible.builtin.set_fact:
+    _image_repo: "{{ local_image_repo | default('jitsi', true) }}"
+
+- name: Sätt lista över Jitsi-images
+  ansible.builtin.set_fact:
+    _jitsi_images:
+      - name: "{{ jitsi_web_name }}""
+        version: "{{ web_version }}"
+      - name: "{{ jitsi_jicofo_name }}""
+        version: "{{ jicofo_version }}"
+      - name: "{{ jitsi_prosody_name }}""
+        version: "{{ prosody_version }}"
+      - name: "{{ jitsi_jvb_name }}""
+        version: "{{ jvb_version }}"
+
+- name: Dra ner Jitsi-images
+  containers.podman.podman_image:
+    name: "{{ _image_repo }}/{{ item.name }}:{{ item.version }}"
+    state: present
+  loop: "{{ _jitsi_images }}"
+  become_user: "{{ podman_user }}"
+  when: container_runtime == 'podman'
+
+- name: Dra ner Jitsi-images (docker)
+  community.docker.docker_image:
+    name: "{{ _image_repo }}/{{ item.name }}:{{ item.version }}"
+    source: pull
+  loop: "{{ _jitsi_images }}"
+  when: container_runtime == 'docker'

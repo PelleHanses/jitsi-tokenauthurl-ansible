@@ -9,9 +9,9 @@ all:
     #      #  ansible_ssh_common_args: "-o ProxyJump={{ my_user }}@jumpserver1.example.se"
     jitsitest:
       hosts:
-        lp001.example.se:
-          ansible_host: lp001.example.se
-          ansible_ssh_host: lp001.example.se
+        server01.example.se:
+          ansible_host: server01.example.se
+          ansible_ssh_host: server01.example.se
       
         #localhost:
         #  ansible_connection: local

@@ -1,21 +1,11 @@
 ---
-- name: Tar bort gamla Prosody-kontofiler från tidigare körningar
+- name: Ta bort Prosody-kontofiler så de återskapas vid uppstart
   ansible.builtin.file:
-    path: "/home/{{ podman_user }}/.jitsi-meet-cfg/prosody/config/data/auth%2emeet%2ejitsi/accounts/{{ item }}"
+    path: "{{ remote_working_directory }}/{{ org_name }}/jitsi/prosody/data/auth%2emeet%2ejitsi/accounts/{{ item }}"
     state: absent
   loop:
     - focus.dat
     - jvb.dat
-    - jibri.dat
-    - jigasi.dat
-
-- name: Ta bort Prosody-kontofiler så de återskapas vid uppstart
-  ansible.builtin.file:
-    path: "{{ remote_working_directory }}/{{ org_name }}/jitsi/{{ item }}"
-    state: absent
-  loop:
-    - prosody/data/auth%2emeet%2ejitsi/accounts/focus.dat
-    - prosody/data/auth%2emeet%2ejitsi/accounts/jvb.dat
   become_user: "{{ podman_user }}"
 
 - name: Startar containrar - Jitsi
@@ -30,15 +20,3 @@
   loop_control:
     label: "{{ item.container }}"
   become_user: "{{ podman_user }}"
-
-#- name: Startar containrar - Övriga
-#  shell: "{{ container_compose_system }} -f docker-compose-{{ item.file }}.yml up -d"
-#  args:
-#    chdir: "{{ remote_working_directory }}/{{ org_name }}"
-#  loop:
-#    #- { container: "{{ keycloak_info }}", installed: "{{ keycloak_info }}_installed",  file: "{{ keycloak_info }}" }
-#    #- { container: "{{ php_info }}",   installed: "{{ php_info }}_installed",  file: "{{ php_info }}" }
-#    - { container: "{{ nginx_info }}",    installed: "{{ nginx_info }}_installed",  file: "{{ nginx_info }}" }
-#  loop_control:
-#    label: "{{ item.container }}"
-#  become_user: "{{ podman_user }}"

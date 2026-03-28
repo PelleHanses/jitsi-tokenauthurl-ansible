@@ -1,9 +1,9 @@
 ---
-- name: Lägg till x-podman före services
+- name: Not use pods, only conainers
   ansible.builtin.blockinfile:
     path: "{{ remote_working_directory }}/{{ org_name }}/jitsi/docker-compose.yml"
     insertbefore: '^services:'
-    marker: ""          # inga BEGIN/END-markörer i yaml-filen
+    marker: ""
     block: |
       x-podman:
         in_pod: false

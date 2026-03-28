@@ -1,20 +1,20 @@
 ---
-# Gemensamt
-#remote_working_directory: "/opt/jitsi"
-remote_working_directory: "/home/opt"
-#podman_user: "podman_jitsi"
-podman_user: "pelle"
+# Container system - Docker or Podman
+container_system: "docker"
+container_compose_system: "docker compose"
+#container_system: "podman"
+#container_compose_system: "podman-compose"
+
+# Jitis common
+remote_working_directory: "/opt/jitsi"
+podman_user: "podman_jitsi"
 service_name: "jitsi"
 TZ: "Europe/Stockholm"
 
-
-# Jitsi
+# Jitsi upstream from Github
 jitsi_upstream_tar: "docker-jitsi-meet.tar"
 
 # Portar
-nginx_port_http: "8081"
-nginx_port_https: "8443"
-
 jitsi_port_web: "8000"
 jitsi_port_web_ssl: "8444"
 
