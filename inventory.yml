@@ -15,3 +15,8 @@ all:
       
         #localhost:
         #  ansible_connection: local
+    jitsitest2:
+      hosts:
+        almatest01.kullgarden.se:
+          ansible_host: almatest01.kullgarden.se
+          ansible_ssh_host: almatest01.kullgarden.se
